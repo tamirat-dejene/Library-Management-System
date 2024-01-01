@@ -1,80 +1,153 @@
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Book {
     private String title;
-    private String ISBN;
+    private ArrayList<Author> author_s; 
+    private String ISBN; 
     private int year;
-    private Author author;
+    private int edition;
+    private String genre;
 
-
-
-    // Constructor
-    public Book() {
-        this("No Title", "000-000000000000", 0, new Author());
-    }
-
-    public Book(String t, String i, int y, Author a) {
-        // Check inputs
-        if (t == null || i == null || y < 0 || a == null)
-            throw new IllegalArgumentException();
-        this.title = t;
-        this.ISBN = i;
-        this.year = y;
-        this.author = a;
-    }
+    private String language;
+    private ArrayList<Rating> ratings;
+    private int numberOfPages;
+    private String synopsis;
+    private boolean available;
+    private double price;
     
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (!(o instanceof Book))
-            return false;
-        Book book = (Book) o;
 
-        return year == book.year && Objects.equals(title, book.title) && Objects.equals(ISBN, book.ISBN);
-    }
-    
-    @Override
-    public int hashCode() {
-        return Objects.hash(title, ISBN, year);
+    /** Construct a book with the given fields */
+    public Book(String title, ArrayList<Author> author_s, String isbn, int pub_year, int edition, String genre,
+            String language, String synopsis, ArrayList<Rating> ratings, int numOfPages, double price, boolean available) {
+        this.title = title;
+        this.author_s = author_s;
+        this.ISBN = isbn;
+        this.year = pub_year;
+        this.edition = edition;
+        this.genre = genre;
+        this.language = language;
+        this.synopsis = synopsis;
+        this.ratings = ratings;
+        this.numberOfPages = numOfPages;
+        this.price = price;
+        this.available = available;   
     }
 
-    // Getters and Setters
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        // Check if valid title
-        if (title == null)
-            throw new IllegalArgumentException("Invalid Title");
-        this.title = title;
+    public ArrayList<Author> getAuthors() {
+        return author_s;
     }
 
     public String getIsbn() {
         return ISBN;
     }
 
-    public void setIsbn(String isbn) {
-        // Check if valid ISBN
-        if (isbn == null || !isValidIsbn(isbn))
-            throw new IllegalArgumentException("Invalid ISBN");
-        ISBN = isbn;
+    public int getYear() {
+        return year;
     }
-        
 
-    private static boolean isValidIsbn(String isbn) {
+    public int getEdition() {
+        return edition;
+    }
+
+    public String getGenre() {
+        return genre;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getSynopsis() {
+        return synopsis;
+    }
+
+    public ArrayList<Rating> getRatings() {
+        return ratings;
+    }
+
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public boolean getAvailable() {
+        return available;
+    }
+
+    public void updateAvailablity(boolean newStatus) {
+        this.available = newStatus;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void addRating(Rating rating) {
+        this.ratings.add(rating);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Book otherBook = (Book) obj;
+        return year == otherBook.year &&
+                edition == otherBook.edition &&
+                numberOfPages == otherBook.numberOfPages &&
+                available == otherBook.available &&
+                Double.compare(otherBook.price, price) == 0 &&
+                Objects.equals(title, otherBook.title) &&
+                Objects.equals(author_s, otherBook.author_s) &&
+                Objects.equals(ISBN, otherBook.ISBN) &&
+                Objects.equals(genre, otherBook.genre) &&
+                Objects.equals(language, otherBook.language) &&
+                Objects.equals(ratings, otherBook.ratings) &&
+                Objects.equals(synopsis, otherBook.synopsis);
+    }
+
+    public boolean hasSameDetails(Book otherBook) {
+        return year == otherBook.year &&
+                edition == otherBook.edition &&
+                numberOfPages == otherBook.numberOfPages &&
+                available == otherBook.available &&
+                Double.compare(otherBook.price, price) == 0 &&
+                Objects.equals(title, otherBook.title) &&
+                Objects.equals(author_s, otherBook.author_s) &&
+                Objects.equals(ISBN, otherBook.ISBN) &&
+                Objects.equals(genre, otherBook.genre) &&
+                Objects.equals(language, otherBook.language) &&
+                Objects.equals(synopsis, otherBook.synopsis);
+    }
+
+
+
+    
+
+        /*private static boolean isValidIsbn(String isbn) {
         // Remove any non-digit characters from the input string
         isbn = isbn.replaceAll("\\D", "");
         // The input string must be of length 10 or 9
         if (!(isbn.length() == 9 || isbn.length() == 10))
             return false;
-        /* Compute check digit:
+        /*
+        * Compute check digit:
         * Multiply each digit in the number by its positional value (first digit has weight 10, second has weight 9,
         * Multiply every third character by 2, starting from index 0
         * Add all other characters to a running total
         * If the number of digits is 9, then subtract the product of the first two numbers from the sum
-        */
+        
         long sum = 0;
         for (int i = 0; i < isbn.length(); i++) {
             char c = isbn.charAt(i);
@@ -93,22 +166,15 @@ public class Book {
         if (checkDigit == 10)
             checkDigit = 0;
         return isbn.endsWith(Integer.toString(checkDigit));
-    }
+        } */
+}
 
-    
+class Rating {
+    String comment;
+    int value;
 
-    public int getYear() {
-        return year;
-    }
-
-    public void setYear(int year) {
-        // Check if valid Year
-        if (year < 0)
-            throw new IllegalArgumentException("Invalid Year");
-        this.year = year;
-    }
-
-    public Author getAuthor() {
-        return new Author(this.author);
+    public Rating(String comment, int value) {
+        this.comment = comment;
+        this.value = value;
     }
 }
