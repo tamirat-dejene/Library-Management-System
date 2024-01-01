@@ -83,7 +83,7 @@ public class LibraryView extends JFrame {
         showUserButton.setFocusable(false);
         northPanel.add(showUserButton);
 
-        ImageIcon bookImage = new ImageIcon("../BookIcon.png");
+        ImageIcon bookImage = new ImageIcon("../resources/BookIcon.png");
         bookImage.setImage(bookImage.getImage().getScaledInstance(50, 70, Image.SCALE_SMOOTH));
         
         addBookButton = new JButton("Add Book", bookImage);
