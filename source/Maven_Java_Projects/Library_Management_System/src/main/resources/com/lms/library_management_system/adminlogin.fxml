@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="scenePane" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="416.0" prefWidth="450.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.LoginController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="More">
+            <items>
+              <MenuItem fx:id="signupMenu" mnemonicParsing="false" onAction="#signup" text="Signup" />
+              <MenuItem fx:id="aboutUsMenu" mnemonicParsing="false" onAction="#aboutUs" text="About us" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem fx:id="resetPasswordMenu" mnemonicParsing="false" onAction="#resetPassword" text="Reset Password" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <AnchorPane prefHeight="366.0" prefWidth="450.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField id="textField" fx:id="usernameTextField" alignment="CENTER" layoutX="171.0" layoutY="119.0" promptText="username" />
+            <PasswordField id="passwordField" fx:id="passwordTextField" alignment="CENTER" layoutX="170.0" layoutY="167.0" promptText="password" />
+            <Label id="usernameLabel" fx:id="usernameLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="93.0" layoutY="124.0" text="Username">
+                   <font>
+                     <Font name="Times New Roman" size="14.0" />
+                   </font>
+            </Label>
+            <Label id="passwordLabel" fx:id="passwordLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="92.0" layoutY="170.0" text="Password">
+                  <font>
+                     <Font name="Times New Roman" size="14.0" />
+                  </font>
+            </Label>
+            <Label id="loginLabel" fx:id="loginLabel" alignment="CENTER" contentDisplay="CENTER" layoutX="142.0" layoutY="55.0" text="ADMIN LOGIN">
+                  <font>
+                     <Font name="Times New Roman Bold" size="19.0" />
+                  </font>
+            </Label>
+            <Button id="submitButton" fx:id="submitButton" alignment="CENTER" contentDisplay="CENTER" layoutX="215.0" layoutY="213.0" mnemonicParsing="false" onAction="#login" text="Submit">
+                  <font>
+                     <Font name="Times New Roman" size="14.0" />
+                  </font>
+            </Button>
+         </children>
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+      </AnchorPane>
+   </center>
+   <bottom>
+      <Button fx:id="exitButton" mnemonicParsing="false" onAction="#exit" prefHeight="37.0" prefWidth="72.0" text="Exit" textAlignment="CENTER" BorderPane.alignment="TOP_RIGHT">
+         <BorderPane.margin>
+            <Insets />
+         </BorderPane.margin>
+         <font>
+            <Font name="Times New Roman" size="14.0" />
+         </font>
+      </Button>
+   </bottom>
+</BorderPane>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="userview" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.MainController">
+   <children>
+      <TableView fx:id="userTable" layoutY="47.0" prefHeight="298.0" prefWidth="600.0" AnchorPane.bottomAnchor="55.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="47.0">
+        <columns>
+          <TableColumn fx:id="colIdNumber" prefWidth="72.79998779296875" text="ID Number" />
+          <TableColumn fx:id="colFullName" prefWidth="232.0" text="Full name" />
+            <TableColumn fx:id="colEmail" prefWidth="183.20001220703125" text="Email" />
+            <TableColumn fx:id="colCountry" prefWidth="110.4000244140625" text="Country" />
+        </columns>
+      </TableView>
+   </children>
+</AnchorPane>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="signupAnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="371.0" prefWidth="590.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.LoginController">
+   <children>
+      <Label layoutX="237.0" layoutY="55.0" prefHeight="18.0" prefWidth="158.0" text="Signup">
+         <font>
+            <Font size="20.0" />
+         </font></Label>
+      <GridPane alignment="CENTER" layoutX="102.0" layoutY="110.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="186.0" prefWidth="417.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="146.39996337890625" minWidth="9.599951171875006" prefWidth="106.39998474121094" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="339.20005187988284" minWidth="10.0" prefWidth="333.6000152587891" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label prefHeight="38.0" prefWidth="118.0" text="Worker ID">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="38.0" prefWidth="182.0" text="Full name" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <Label prefHeight="66.0" prefWidth="124.0" text="Email address" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="workerIDTextField" prefHeight="0.0" prefWidth="294.0" GridPane.columnIndex="1" />
+            <TextField fx:id="fullNameTextFieldl" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="emailAddressTextField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label fx:id="positionTextField" prefHeight="82.0" prefWidth="124.0" text="Position" GridPane.rowIndex="3">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <TextField GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label prefHeight="89.0" prefWidth="124.0" text="Password" GridPane.rowIndex="4">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <TextField fx:id="passwordTextField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
+      <Button fx:id="signupSubmitButton" layoutX="285.0" layoutY="312.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="137.0" text="Submit">
+         <font>
+            <Font name="Times New Roman" size="16.0" />
+         </font>
+      </Button>
+      <Button fx:id="gobackButton" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="&lt;-" />
+   </children>
+</AnchorPane>
