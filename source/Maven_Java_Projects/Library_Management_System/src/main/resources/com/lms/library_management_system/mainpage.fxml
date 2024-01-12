@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
@@ -11,24 +11,35 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
-<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.MainController">
+<BorderPane fx:id="mainBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="720.0" minWidth="1080.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.MainController">
    <center>
-      <ScrollPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane prefHeight="672.0" prefWidth="1067.0" BorderPane.alignment="CENTER">
          <content>
-            <ScrollPane prefHeight="341.0" prefWidth="590.0">
-              <content>
-                <AnchorPane fx:id="mainAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="315.0" prefWidth="530.0" />
-              </content>
-            </ScrollPane>
+            <AnchorPane fx:id="centerPane" minHeight="649.0" minWidth="1023.0" prefHeight="649.0" prefWidth="1023.0">
+               <children>
+                  <Rectangle arcHeight="5.0" arcWidth="5.0" disable="true" fill="#ffe5a7" height="311.0" layoutX="94.0" layoutY="169.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.5" width="855.0" />
+                  <Label layoutX="240.0" layoutY="203.0" prefHeight="130.0" prefWidth="562.0" text="  WELCOME TO THE LIBRARY " textFill="#0090ff">
+                     <font>
+                        <Font name="Lucida Calligraphy Italic" size="32.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="280.0" layoutY="333.0" prefHeight="72.0" prefWidth="482.0" text="MANAGEMENT SYSTEM" textFill="#0090ff">
+                     <font>
+                        <Font name="Lucida Calligraphy Italic" size="32.0" />
+                     </font>
+                  </Label>
+               </children></AnchorPane>
          </content>
       </ScrollPane>
    </center>
    <left>
-      <VBox prefHeight="334.0" prefWidth="26.0" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="672.0" prefWidth="7.0" BorderPane.alignment="CENTER" />
    </left>
    <top>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane prefHeight="38.0" prefWidth="1080.0" BorderPane.alignment="CENTER">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -38,43 +49,23 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <MenuButton mnemonicParsing="false" prefHeight="30.0" prefWidth="199.0" text="User Management">
-               <items>
-                  <MenuItem fx:id="registerUserMenu" mnemonicParsing="false" onAction="#listUsers" text="List users" />
-                  <MenuItem fx:id="registerUserMenu" mnemonicParsing="false" onAction="#registerUser" text="Register new user" />
-                  <MenuItem fx:id="verifyUserMenu" mnemonicParsing="false" onAction="#verifyUser" text="Verify user" />
-                  <MenuItem fx:id="getUserByIDMenu" mnemonicParsing="false" onAction="#getUserByID" text="Get user by id" />
-                  <MenuItem fx:id="totalUsersMenu" mnemonicParsing="false" onAction="#totalUsers" text="Total number of users" />
-               </items>
-            </MenuButton>
-            <MenuButton mnemonicParsing="false" prefHeight="32.0" prefWidth="200.0" text="Book Management" GridPane.columnIndex="1">
-               <items>
-                  <MenuItem fx:id="listBooksMenu" mnemonicParsing="false" onAction="#listBooks" text="List all books" />
-                  <MenuItem fx:id="addBookMenu" mnemonicParsing="false" onAction="#addBooks" text="Add books to the library" />
-                  <MenuItem fx:id="addAuthorsMenu" mnemonicParsing="false" onAction="#addAuthors" text="Add book authors" />
-                  <MenuItem fx:id="lendBooksMenu" mnemonicParsing="false" onAction="#lendBooks" text="Lend book" />
-                  <MenuItem fx:id="booksStatusMenu" mnemonicParsing="false" onAction="#checkBookStatus" text="Check book status" />
-               </items>
-            </MenuButton>
-            <MenuButton mnemonicParsing="false" prefHeight="62.0" prefWidth="200.0" text="Workers Management" GridPane.columnIndex="2">
-               <items>
-                  <MenuItem mnemonicParsing="false" text="Hire new worker" />
-                  <MenuItem mnemonicParsing="false" text="Remove worker" />
-                  <MenuItem mnemonicParsing="false" text="Hire new worker" />
-                  <MenuItem mnemonicParsing="false" text="Find worker by id" />
-               </items>
+            <MenuButton mnemonicParsing="false" prefHeight="26.0" prefWidth="238.0" text="               MAIN MENU">
+              <items>
+                  <MenuItem fx:id="homeMenu" mnemonicParsing="false" onAction="#home" text="HOME" />
+                  <MenuItem fx:id="listUser" mnemonicParsing="false" onAction="#listUsers" text="LIBRARY USERS MANAGEMENT" />
+                  <MenuItem fx:id="listBooksMenu" mnemonicParsing="false" onAction="#listBooks" text="BOOK SHELF MANAGEMENT" />
+              </items>
+               <font>
+                  <Font name="Times New Roman Bold" size="15.0" />
+               </font>
             </MenuButton>
          </children>
       </GridPane>
    </top>
    <bottom>
-      <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-        <items>
-          <Button mnemonicParsing="false" text="Logout" />
-        </items>
-      </ToolBar>
+      <ToolBar prefHeight="2.0" prefWidth="1080.0" BorderPane.alignment="CENTER" />
    </bottom>
    <right>
-      <VBox prefHeight="330.0" prefWidth="26.0" BorderPane.alignment="CENTER" />
+      <VBox prefHeight="672.0" prefWidth="8.0" BorderPane.alignment="CENTER" />
    </right>
 </BorderPane>

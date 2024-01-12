@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<SplitPane fx:id="mainSplitPane" dividerPositions="0.5" maxHeight="-Infinity" maxWidth="1.7976931348623157E308" minHeight="607.0" minWidth="1080.0" orientation="VERTICAL" prefHeight="607.0" prefWidth="1061.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.lms.library_management_system.BookController">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="1072.0" prefHeight="100.0" prefWidth="160.0">
+         <children>
+            <TabPane fx:id="tableViews_TabPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <tabs>
+                  <Tab text="LibraryBooks">
+                     <content>
+                        <ScrollPane minWidth="1080.0">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="1080.0">
+                                 <children>
+                                    <TableView fx:id="BookShelfTableView" minHeight="408.0" minWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="BookShelf_colBookId" prefWidth="75.0" text="Book Id" />
+                                          <TableColumn fx:id="BookShelf_colAuthorId" prefWidth="75.0" text="Author Id" />
+                                          <TableColumn fx:id="BookShelf_colTitle" prefWidth="75.0" text="Title" />
+                                          <TableColumn fx:id="BookShelf_ColEdition" prefWidth="75.0" text="Edition" />
+                                          <TableColumn fx:id="BookShelf_colYear" prefWidth="75.0" text="Year" />
+                                          <TableColumn fx:id="BookShelf_colLanguage" prefWidth="75.0" text="Language" />
+                                          <TableColumn fx:id="BookShelf_colPrice" prefWidth="75.0" text="Price" />
+                                          <TableColumn fx:id="BookShelf_colGenre" prefWidth="118.4000244140625" text="Genre" />
+                                          <TableColumn fx:id="BookShelf_colSynopsis" prefWidth="252.800048828125" text="Synopsis" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Issued Books">
+                     <content>
+                        <ScrollPane minWidth="1080.0">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="1080.0">
+                                 <children>
+                                    <TableView fx:id="issuedBookListTableView" minHeight="408.0" minWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="issuedBook_colIssueId" prefWidth="173.60000842809677" text="Issue Id" />
+                                          <TableColumn fx:id="issuedBook_colBookId" prefWidth="174.40000915527344" text="Book Id" />
+                                          <TableColumn fx:id="issuedBook_colUserId" prefWidth="197.60000610351562" text="User Id" />
+                                          <TableColumn fx:id="issuedBook_colIssueDate" prefWidth="172.7999267578125" text="Issue Date" />
+                                          <TableColumn fx:id="issuedBook_returnDate" prefWidth="184.0001220703125" text="Return date" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+                  <Tab text="Authors">
+                     <content>
+                        <ScrollPane minWidth="1080.0" prefHeight="288.0" prefWidth="910.0">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="1080.0">
+                                 <children>
+                                    <TableView fx:id="AuthorTableView" minHeight="408.0" minWidth="1080.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="AuthorDb_colAuthId" prefWidth="109.60000079870224" text="Author Id" />
+                                          <TableColumn fx:id="AuthDb_colFullName" prefWidth="168.00005340576172" text="Full name" />
+                                          <TableColumn fx:id="AuthDb_colCountry" prefWidth="115.199951171875" text="Country" />
+                                          <TableColumn fx:id="AuthDb_colEmail" prefWidth="176.79989624023438" text="Email" />
+                                          <TableColumn fx:id="AuthDb_colBio" prefWidth="339.2000732421875" text="Biography" />
+                                       </columns>
+                                    </TableView>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+         </children></AnchorPane>
+      <AnchorPane fx:id="lowerAnchorPane" minHeight="276.0" minWidth="1072.0" prefHeight="276.0" prefWidth="1080.0">
+         <children>
+            <Button layoutX="14.0" layoutY="14.0" mnemonicParsing="false" onAction="#issueBook" text="Issue a book" textFill="#34a2e1">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Button>
+            <DatePicker fx:id="issueDateDatePicker" layoutX="558.0" layoutY="14.0" prefHeight="26.0" prefWidth="147.0" promptText="Issue date" />
+            <DatePicker fx:id="dueDateDatePicker" layoutX="722.0" layoutY="14.0" prefHeight="26.0" prefWidth="147.0" promptText="Due date" />
+            <TextField fx:id="issueId_tf" alignment="CENTER" layoutX="112.0" layoutY="14.0" prefHeight="26.0" prefWidth="104.0" promptText="Issue Id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="issuedUserId_tf" alignment="CENTER" layoutX="234.0" layoutY="14.0" prefHeight="26.0" prefWidth="114.0" promptText="User id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="issuedBookTitle_tf" alignment="CENTER" layoutX="361.0" layoutY="14.0" prefHeight="26.0" prefWidth="187.0" promptText="Book title">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <Button layoutX="14.0" layoutY="55.0" mnemonicParsing="false" onAction="#addNewAuthor" prefHeight="26.0" prefWidth="90.0" text="Add author" textFill="#34a2e1">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Button>
+            <TextField fx:id="newAuthorId_tf" alignment="CENTER" layoutX="112.0" layoutY="55.0" prefHeight="26.0" prefWidth="104.0" promptText="Author Id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newAuthorFullname_tf" alignment="CENTER" layoutX="234.0" layoutY="55.0" prefHeight="26.0" prefWidth="224.0" promptText="Author fullname">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newAuthorEmail_tf" alignment="CENTER" layoutX="471.0" layoutY="55.0" prefHeight="26.0" prefWidth="233.0" promptText="Email address">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newAuthorCountry_tf" alignment="CENTER" layoutX="722.0" layoutY="55.0" prefHeight="26.0" prefWidth="147.0" promptText="Country">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newAuthorBio_tf" layoutX="471.0" layoutY="93.0" prefHeight="26.0" prefWidth="398.0" promptText="Author biography">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <Button layoutX="14.0" layoutY="129.0" mnemonicParsing="false" onAction="#addNewBook" prefHeight="26.0" prefWidth="90.0" text="Add Book" textFill="#34a2e1">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Button>
+            <TextField fx:id="newBookAuthId_tf" alignment="CENTER" layoutX="234.0" layoutY="129.0" prefHeight="26.0" prefWidth="104.0" promptText="Author Id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookId_tf" alignment="CENTER" layoutX="112.0" layoutY="129.0" prefHeight="26.0" prefWidth="104.0" promptText="Book Id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookTitle_tf" alignment="CENTER" layoutX="346.0" layoutY="129.0" prefHeight="26.0" prefWidth="187.0" promptText="Book title">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookYear_tf" alignment="CENTER" layoutX="548.0" layoutY="129.0" prefHeight="26.0" prefWidth="57.0" promptText="Year">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookLang_tf" alignment="CENTER" layoutX="618.0" layoutY="129.0" prefHeight="26.0" prefWidth="90.0" promptText="Language">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookEdition_tf" alignment="CENTER" layoutX="722.0" layoutY="129.0" prefHeight="26.0" prefWidth="57.0" promptText="Edition">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookPrice_tf" alignment="CENTER" layoutX="789.0" layoutY="129.0" prefHeight="26.0" prefWidth="80.0" promptText="Price">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookSynop_tf" layoutX="345.0" layoutY="165.0" prefHeight="26.0" prefWidth="524.0" promptText="Synopsis">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="newBookGenre_tf" alignment="CENTER" layoutX="14.0" layoutY="165.0" prefHeight="26.0" prefWidth="322.0" promptText="Genre">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <Button layoutX="15.0" layoutY="240.0" mnemonicParsing="false" onAction="#returnIssuedBook" prefHeight="26.0" prefWidth="124.0" text="Return book" textFill="#34a2e1">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Button>
+            <TextField fx:id="returnIssuedUserId_tf" alignment="CENTER" layoutX="144.0" layoutY="240.0" prefHeight="26.0" prefWidth="124.0" promptText="User id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="returnIssuedBookId_tf" alignment="CENTER" layoutX="283.0" layoutY="240.0" prefHeight="26.0" prefWidth="187.0" promptText="Book id">
+               <font>
+                  <Font name="Times New Roman" size="14.0" />
+               </font>
+            </TextField>
+            <Label fx:id="returnStatusLabel" layoutX="497.0" layoutY="240.0" prefHeight="26.0" prefWidth="369.0" textFill="#00b4eb">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Label>
+            <Button layoutX="910.0" layoutY="136.0" mnemonicParsing="false" onAction="#removeBookButton" prefHeight="28.0" prefWidth="147.0" text="Remove Book" textFill="#fc0f0f">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Button>
+            <Separator layoutX="886.0" orientation="VERTICAL" prefHeight="394.0" prefWidth="4.0" />
+            <TextField fx:id="removeBookTextField" alignment="CENTER" layoutX="909.0" layoutY="106.0" promptText="Book Id" />
+            <Button layoutX="911.0" layoutY="15.0" mnemonicParsing="false" onAction="#refreshButton" prefHeight="26.0" prefWidth="142.0" text="REFRESH" textFill="#06bc37">
+               <font>
+                  <Font name="Times New Roman Bold" size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="910.0" layoutY="239.0" mnemonicParsing="false" onAction="#removeAuthorButton" prefHeight="28.0" prefWidth="147.0" text="Remove Author" textFill="#fc0f0f">
+               <font>
+                  <Font name="Times New Roman" size="15.0" />
+               </font>
+            </Button>
+            <TextField fx:id="removeAuthorTextField" alignment="CENTER" layoutX="909.0" layoutY="206.0" promptText="Author Id" />
+         </children>
+      </AnchorPane>
+  </items>
+</SplitPane>

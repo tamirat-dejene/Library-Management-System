@@ -42,7 +42,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.4</version>
                 <configuration>
-                    <mainClass>com.lms.library_management_system.App</mainClass>
+                    <mainClass>com.lms.library_management_system.LoginController</mainClass>
                 </configuration>
                 <executions>
                     <execution>

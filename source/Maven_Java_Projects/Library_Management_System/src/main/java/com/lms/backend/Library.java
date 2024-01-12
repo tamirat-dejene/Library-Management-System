@@ -1,26 +1,21 @@
 package com.lms.backend;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-
-
-public class Library {
+public class Library extends BookTransaction  {
     private ArrayList<Worker> workers;
     private ArrayList<User> users;
     private ArrayList<Book> books;
-    private HashMap<User, List<Book>> borrowedBooks;
+    private ArrayList<Author> authors;
+    private ArrayList<BookTransaction> issued_books;
     
     // Database
     private static String url;
@@ -32,13 +27,16 @@ public class Library {
     private static ResultSet result;
     private static PreparedStatement prprd_statement;
     
-
+    /**
+     *  Team INNOV8
+     */
     public Library() {
+        super();
         this.users = new ArrayList<User>();
         this.workers = new ArrayList<Worker>();
-        this.borrowedBooks = new HashMap<User, List<Book>>();
         this.books = new ArrayList<Book>();
-        
+        this.authors = new ArrayList<Author>();
+        this.issued_books = new ArrayList<BookTransaction>();
         
         // Database variables
         connection = null;
@@ -56,9 +54,9 @@ public class Library {
             connection = DriverManager.getConnection(url, user, password);
             return connection;
         } catch(SQLException e) {
-            System.out.println("SQLException : " + e.getMessage());
-            System.out.println("SQLState     : " + e.getSQLState());
-            System.out.println("VendorError  : " + e.getErrorCode());
+            //System.out.println("SQLException : " + e.getMessage());
+            //System.out.println("SQLState     : " + e.getSQLState());
+            //System.out.println("VendorError  : " + e.getErrorCode());
             return null;
         }
     }
@@ -91,17 +89,20 @@ public class Library {
     }
 
     public boolean admin_login(String username, String password) {
-        String user_name = "", pass_word = "";
+        String user_name, pass_word;
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery("SELECT * FROM Systemadmin");
             
-            if(result.next()){
+            while(result.next()){
                 user_name = result.getString("Username");
                 pass_word = result.getString("Password");
+                if (user_name.equals(username) && pass_word.equals(password))
+                    return true;
             }
-            return user_name.equals(username) && pass_word.equals(password); //System.out.println("SUCCESFULLY  LOGGEDIN");
+            return false;
+            //System.out.println("SUCCESFULLY  LOGGEDIN");
             // System.out.println("INCORRECT USERNAME OR PASSWORD");
         } catch(SQLException e) {  
             return false;
@@ -111,12 +112,18 @@ public class Library {
         }
     }
     
-   public boolean admin_signup(String worker_id, String user_name, String password) {
-    String queryCheckWorker = "SELECT Full_name FROM Worker WHERE IdNumber = ?";
-    String queryInsertAdmin = "INSERT INTO Systemadmin(Idnumber, Username, Password) VALUES (?, ?, ?)";
+    public boolean admin_signup(String worker_id, String full_name, String email, String user_name, String password) {
+        String queryCheckWorker = "SELECT Full_name FROM Worker WHERE IdNumber = ?";
+        String queryInsertAdmin = "INSERT INTO Systemadmin(Idnumber, Username, Password) VALUES (?, ?, ?)";
+        
+        try {
+            hire_new_worker(new Worker(full_name,worker_id,"Admin",email));
+        } catch(SQLException ex){
+            // Just in case the worker doesn't exist in the database
+        }
 
-    try {
-        // Check if the Worker exists
+        try {
+            // Check if the Worker exists
             connection = connect_to_database();
             prprd_statement = connection.prepareStatement(queryCheckWorker);
             prprd_statement.setString(1, worker_id);
@@ -124,14 +131,16 @@ public class Library {
 
             if (result.next()) {
                 // Worker exists, proceed to insert into Systemadmin
-                    prprd_statement = connection.prepareStatement(queryInsertAdmin);
-                    prprd_statement.setString(1, worker_id);
-                    prprd_statement.setString(2, user_name);
-                    prprd_statement.setString(3, password);
+                prprd_statement = connection.prepareStatement(queryInsertAdmin);
+                prprd_statement.setString(1, worker_id);
+                prprd_statement.setString(2, user_name);
+                prprd_statement.setString(3, password);
 
-                    int rowsAffected = prprd_statement.executeUpdate();
-                    return rowsAffected > 0;
-            } else return false;
+                int rowsAffected = prprd_statement.executeUpdate();
+                return rowsAffected > 0;
+            } else {
+                return false;
+            }
         } catch (SQLException ex) {
             System.out.println("SQLException: " + ex.getMessage());
         } finally {
@@ -140,7 +149,7 @@ public class Library {
         return false;
     }
    
-    public void resetPassword(String id_number, String new_password){
+    public boolean resetPassword(String id_number, String new_password){
         String query = "UPDATE Systemadmin SET Password = ? WHERE  Idnumber = ?";
         try {
             connection = connect_to_database();
@@ -151,19 +160,22 @@ public class Library {
                 int rowsAffected = preparedStatement.executeUpdate();
 
                 if (rowsAffected > 0) {
-                    System.out.println("Cell value updated successfully.");
+                    // System.out.println("Cell value updated successfully.");
+                    return true;
                 } else {
-                    System.out.println("No matching records found for the given condition.");
+                   //  System.out.println("No matching records found for the given condition.");
+                   return false;
                 }
             }
         } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
+           // System.out.println("SQLException: " + e.getMessage());
         } finally {
             close_connection();
         }
+        return false;
     }
-
-    public void hire_new_worker(Worker newWorker) {
+    
+    public void hire_new_worker(Worker newWorker) throws SQLException {
         String name = newWorker.getFull_name();
         String pos = newWorker.getRole();
         String email = newWorker.getEmail_id();
@@ -177,7 +189,7 @@ public class Library {
             statement = connection.createStatement();
             statement.executeUpdate(query1 + query2);
         } catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
+            throw e;
         } finally{
             close_connection();
         }
@@ -216,24 +228,120 @@ public class Library {
         }
     }
 
-    public boolean verify_user(String full_name, String id_number) {
+    public void removeUser(String id_number){
+        String query = "DELETE FROM User WHERE Idnumber = '" + id_number + "'";
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+        } catch(SQLException ex){
+            //
+        } finally {
+            close_connection();
+        }
+    }
+    
+    public boolean isVerified(String id_number) {
         String query = "SELECT * FROM User WHERE Idnumber = '" + id_number + "'";
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery(query);
             while(result.next()){
-                return full_name.equals(result.getString("Fullname")) && id_number.equals(result.getString("Idnumber"));
+                return id_number.equals(result.getString("Idnumber"));
             }
         } catch (SQLException ex) {
             return false;
-            // Logger.getLogger(Library.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             close_connection();
         }
         return false;
     }
 
+    public ArrayList<User> getUserList(){
+        ResultSet resultSet = null;
+        String query = "SELECT * FROM User";
+        try{
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            
+            while(resultSet.next()){
+                users.add(new User(resultSet.getString("Type"), 
+                        resultSet.getString("Fullname"), 
+                        resultSet.getString("Idnumber"), 
+                        resultSet.getString("Email")));
+            }
+        } catch(SQLException e){
+            return null;
+        } finally {
+            close_connection();
+            if(resultSet!=null) try {
+                resultSet.close();
+            } catch (SQLException ex) {
+            }
+        }
+        return users;  
+    }
+    
+    public ArrayList<Author> getAuthorList(){
+        ResultSet resultSet = null;
+        String query = "SELECT * FROM Author";
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            
+            while(resultSet.next()){
+                authors.add(new Author(resultSet.getString("Biography"),
+                        resultSet.getString("Country"), 
+                        resultSet.getString("Fullname"), 
+                        resultSet.getString("Idnumber"), 
+                        resultSet.getString("Email")));
+            }
+            return authors;
+        } catch(SQLException e){
+            //
+        } finally {
+            close_connection();
+            if(resultSet!=null)try {
+                resultSet.close();
+            } catch (SQLException ex) {
+                ////
+            }
+        }
+        return authors;
+    }
+    
+    public ArrayList<BookTransaction> getIssuedBooks(){
+        String query = "SELECT * FROM Borrow_transaction";
+        ResultSet resultSet = null;
+        
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()){
+                issued_books.add(new BookTransaction(resultSet.getString("borrowId"), 
+                        resultSet.getString("Bookid"), 
+                        resultSet.getString("UserID"), 
+                        resultSet.getString("Rent_date"), 
+                        resultSet.getString("Due_date")));
+            }
+            return issued_books;
+        } catch(SQLException e){
+            /// I donnnooo
+        } finally{
+            close_connection();
+            if(resultSet != null) try {
+                resultSet.close();
+            } catch (SQLException ex) {
+                ////
+            }
+        }
+        return issued_books;
+    }
+    
     public void addAuthor(Author author){
         String insertAuthor = "INSERT INTO Author (Idnumber, Fullname, Email, Country, Biography) VALUES (?, ?, ?, ?, ?)";
         try {
@@ -253,9 +361,22 @@ public class Library {
         }
     }
     
+    public int removeAuthor(String auth_id) throws SQLException{
+        String query = "DELETE FROM Author WHERE Idnumber = '" + auth_id + "'";
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            int rows = statement.executeUpdate(query);
+            return rows;
+        } catch(SQLException e){
+            throw e;
+        } finally{
+            close_connection();
+        }
+    }
     public void addBook(Book new_book) {
-    String query1 = "INSERT INTO Book (Bookid, Title, AuthorIdnumber, Publicationyear, Edition, Genre, Lang, Synopsis, Price) VALUES ";
-    String query2 = "('" + new_book.getISBN()+ "', " +
+        String query1 = "INSERT INTO Book (Bookid, Title, AuthorIdnumber, Publicationyear, Edition, Genre, Lang, Synopsis, Price) VALUES ";
+        String query2 = "('" + new_book.getISBN()+ "', " +
                     "'" + new_book.getTitle() + "', " +
                     "'" + new_book.getAuthor().getId_number() + "', " +
                     new_book.getYear()+ ", " +
@@ -264,98 +385,131 @@ public class Library {
                     "'" + new_book.getLanguage()+ "', " +
                     "'" + new_book.getSynopsis() + "', " +
                     new_book.getPrice() + ")";
-    try {
-        connection = connect_to_database();
-        statement = connection.createStatement();
-        statement.executeUpdate(query1 + query2);
-    } catch (SQLException e) {
-        System.out.println("SQLException: " + e.getMessage());
-    } finally {
-        close_connection();
-    }
-}
-
-    
-    public void borrowBook(String borrId, String user_id, String title, Datee rd, Datee dd) {
-        String query= "SELECT Bookid from Book WHERE Title = ?";
-        
         try {
             connection = connect_to_database();
-            prprd_statement = connection.prepareStatement(query);
-            prprd_statement.setString(1, title);
-            result = prprd_statement.executeQuery();
-            
-            query = "INSERT INTO Borrow_transaction (borrowId, Bookid, UserID, Rent_date, Due_date) VALUES (?, ?, ?, ?, ?)";
-            
-            prprd_statement = connection.prepareStatement(query);
-            
-            prprd_statement.setString(1, borrId);
-            if(result.next())
-                prprd_statement.setString(2, result.getString("Bookid"));
-            prprd_statement.setString(3, user_id);
-            
-            String rentday = Integer.toString(rd.getYear()) + "-" + 
-                    Integer.toString(rd.getMonth()) + "-" + 
-                    Integer.toString(rd.getDay());
-            String dueday = Integer.toString(dd.getYear()) + "-" + 
-                    Integer.toString(dd.getMonth()) + "-" + 
-                    Integer.toString(dd.getDay());
-            prprd_statement.setString(4, rentday);
-            prprd_statement.setString(5, dueday);
-            
-            prprd_statement.executeUpdate();
-        } catch(SQLException e){
+            statement = connection.createStatement();
+            statement.executeUpdate(query1 + query2);
+        } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
+        } finally {
+            close_connection();
+    }
+}
+    
+    public int removeBook(String bookId) throws SQLException{
+        String query = "DELETE FROM Book WHERE bookId = '" + bookId + "'";
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            int rowAffected = statement.executeUpdate(query);
+            return rowAffected;
+        } catch(SQLException ex){
+            throw ex;
+        } finally{
+            close_connection();
+        }
+    }
+
+    public int borrowBook(String borrowId, String userId, String title, String issueDate, String dueDate) {
+        String selectQuery = "SELECT Bookid FROM Book WHERE Title = ?";
+        String insertQuery = "INSERT INTO Borrow_transaction (borrowId, Bookid, UserID, Rent_date, Due_date) VALUES (?, ?, ?, ?, ?)";
+        String bookId;
+
+        try {
+            connection = connect_to_database();
+            try (PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
+                selectStatement.setString(1, title);
+                ResultSet selectResult = selectStatement.executeQuery();
+
+                if (selectResult.next()) {
+                    bookId = selectResult.getString("Bookid");
+                    java.sql.Date rentDate = java.sql.Date.valueOf(issueDate);
+                    java.sql.Date dueDateSql = java.sql.Date.valueOf(dueDate);
+
+                    try (PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                        insertStatement.setString(1, borrowId);
+                        insertStatement.setString(2, bookId);
+                        insertStatement.setString(3, userId);
+                        insertStatement.setDate(4, rentDate);
+                        insertStatement.setDate(5, dueDateSql);
+
+                        int rowAffected = insertStatement.executeUpdate();
+                        return rowAffected;
+                    }
+                } else {
+                    return 0; 
+                }
+            }
+
+        } catch (SQLException e) {
+            return 0;
         } finally {
             close_connection();
         }
     }
     
-    public boolean returnBook(String bookid, String userid){
-        String query = "DELETE FROM Borrow_transaction WHERE Bookid = '" + bookid + "' AND UserID = '" + userid + "'";
-        int rowsAffected = 0;
-        try {
-            connection = connect_to_database();
-            statement = connection.createStatement();
-            rowsAffected = statement.executeUpdate(query);
-            return (rowsAffected > 0);
-        } catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
-        } finally{
-            close_connection();
-        }
-        return false;
-    }
-    
-    //// errorr ---
-    public ArrayList<Book> getBookList() {
-        String query = "SELECT * FROM Book";
+    public String getBookId(String title){
+        String query = "SELECT Bookid FROM Book WHERE Title = '" + title + "'";
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery(query);
+            if(result.next())
+                return result.getString("Bookid");
+            else
+                return "";
+        } catch(SQLException e){
             
-            ResultSetMetaData metaData = result.getMetaData();
-            int columnCount = metaData.getColumnCount();
-            for (int i = 1; i <= columnCount; i++) {
-                System.out.println("Column Name: " + metaData.getColumnName(i));
-            }
+        }
+        return "";
+    }
 
-            while(result.next()){
-                books.add(new Book(result.getString("Title"),
-                        getAuthorById(result.getString("AuthorIdNumber")), 
-                        result.getString("Bookid"), 
-                        result.getInt("Publicationyear"), 
-                        result.getInt("Edition"), 
-                        result.getString("Genre"), 
-                        result.getString("Lang"), 
-                        result.getString("Synopsis"), 
-                        result.getDouble("Price")));
+    public void returnBook(String bookid, String userid){
+        String query = "DELETE FROM Borrow_transaction WHERE Bookid = '" + bookid + "' AND UserID = '" + userid + "'";
+       // int rowsAffected;
+        try {
+            connection = connect_to_database();
+            statement = connection.createStatement();
+            statement.executeUpdate(query);
+           // return (rowsAffected > 0);
+        } catch(SQLException e){
+           // System.out.println("SQLException: " + e.getMessage());
+        } finally{
+            close_connection();
+        }
+    }
+    
+    public ArrayList<Book> getBookList() throws Exception {
+        ResultSet resultSet = null;
+        String query = "SELECT * FROM Book";
+        try {
+            connection = connect_to_database();
+            connection.setAutoCommit(true); 
+            
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            resultSet = statement.executeQuery(query);
+            while(resultSet.next()){
+                String title = resultSet.getString("Title");
+                String auth_id = resultSet.getString("AuthorIdNumber");
+                String bookId = resultSet.getString("Bookid");
+                int year = resultSet.getInt("Publicationyear");
+                int edition = resultSet.getInt("Edition");
+                String genre = resultSet.getString("Genre");
+                String lang = resultSet.getString("Lang");
+                String synopsis = resultSet.getString("Synopsis");
+                Double price = resultSet.getDouble("Price");
+                                
+                Author author = getAuthorById(auth_id);
+                books.add(new Book(title, author, bookId, year, edition, genre,lang, synopsis, price));
             }            
         } catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
+            throw new Exception("BOOKS NOT FOUND");
         } finally {
             close_connection();
+            if(resultSet!=null) try {
+                resultSet.close();
+            } catch (SQLException ex) {
+            }
         }
         return this.books;
     }
@@ -374,7 +528,7 @@ public class Library {
                 return new Worker(full_n, worker_id, role, email);
             }
         } catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
+          //  System.out.println("SQLException: " + e.getMessage());
             return null;
         } finally {
             close_connection();
@@ -391,7 +545,7 @@ public class Library {
             if(result.next())
                 return true;
         } catch (SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
+           // System.out.println("SQLException: " + e.getMessage());
         } finally {
             close_connection();
         }
@@ -422,14 +576,15 @@ public class Library {
                 return rowCount;
             }
         } catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
+            //System.out.println("SQLException: " + e.getMessage());
         } finally {
             close_connection();
         }
         return -1;
     }
 
-    private Author getAuthorById(String authorIdNumber) {
+    public Author getAuthorById(String authorIdNumber) throws Exception, SQLException {
+        ResultSet result;
         String query = "SELECT * FROM Author WHERE Idnumber = '" + authorIdNumber + "'";
         try {
             connection = connect_to_database();
@@ -439,8 +594,9 @@ public class Library {
                 return new Author(result.getString("Biography"), result.getString("Country"), result.getString("Fullname"), result.getString("Idnumber"), result.getString("Email"));
             }
         } catch(SQLException e){
-            System.out.println("SQLException: "+ e.getMessage());
-            return null;
+            throw new Exception("AUTHOR NOT FOUND IN THE DATABASE");
+        } finally{
+            close_connection();
         }
         return null;
     }
@@ -472,11 +628,7 @@ public class Library {
             System.out.println("Position : " + w.getEmail_id());
         } 
         
-        ArrayList<Book> bl = lib.getBookList();
-        if(bl != null){
-        for(Book b : bl)
-            System.out.println(b.getTitle());
-        } 
+       
         
         Datee bd = new Datee(2024, 01, 10);
         Datee dd = new Datee(2023, 02, 10);
@@ -489,7 +641,7 @@ public class Library {
         Author auth = new Author("Historical fiction writer weaving tales from ancient civilizations.", "Egypt", "Ahmed Ali", "A020", "ahmed.ali@email.com" );
         lib.addAuthor(auth);
         
-        if(lib.verify_user("Eva Martinez", "U005")){
+        if(lib.isVerified("U005")){
             System.out.println("User U005 is verified!");
         }
         
@@ -499,11 +651,24 @@ public class Library {
         lib.fire_worker("-001");
         
         Worker newW = new Worker("Grace Brown", "W010", "Administrator", "grace.brown@email.com");
-        lib.hire_new_worker(newW); */
+        lib.hire_new_worker(newW);
         
         //
         
         //lib.admin_signup("ETS1518/14", "tamiu", "abcd");
-        lib.resetPassword("ETS1518/14", "abcd");
+        //lib.resetPassword("ETS1518/14", "abcd");
+        
+        ArrayList<Book> bl = lib.getBookList();
+        if(bl != null){
+        for(Book b : bl)
+            System.out.println(b.getAuthor().getBiography());
+        }
+        System.out.println(lib.getBookId("The Silent Symphony"));
+        System.out.println(lib.borrowBook("B00_U001", "U001", "The Silent Symphony", "2024-1-2", "2024-1-1"));
+        lib.borrowBook("BORR113", "U002", "Political Insights", new Date(2024, 2, 20), new Date(2024, 2, 25)); */
+        
+        
+        
+        
     }
 }
