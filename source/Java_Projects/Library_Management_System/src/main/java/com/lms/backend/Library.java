@@ -1,13 +1,11 @@
 package com.lms.backend;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import java.util.ArrayList;
 
 public class Library extends BookTransaction  {
@@ -16,39 +14,39 @@ public class Library extends BookTransaction  {
     private ArrayList<Book> books;
     private ArrayList<Author> authors;
     private ArrayList<BookTransaction> issued_books;
-    
+
     // Database
     private static String url;
     private static String user;
     private static String password;
-    
+
     private static Connection connection;
     private static Statement statement;
     private static ResultSet result;
     private static PreparedStatement prprd_statement;
-    
+
     /**
      *  Team INNOV8
      */
     public Library() {
         super();
-        this.users = new ArrayList<User>();
-        this.workers = new ArrayList<Worker>();
-        this.books = new ArrayList<Book>();
-        this.authors = new ArrayList<Author>();
-        this.issued_books = new ArrayList<BookTransaction>();
-        
+        this.users = new ArrayList<>();
+        this.setWorkers(new ArrayList<>());
+        this.books = new ArrayList<>();
+        this.authors = new ArrayList<>();
+        this.issued_books = new ArrayList<>();
+
         // Database variables
         connection = null;
         statement = null;
         prprd_statement = null; // prepared statement
         result = null;
-        
+
         url = "jdbc:mysql://localhost:3306/Library_Management_System";
         user = "root";
         password = "tamirat.mySQL";
     }
-    
+
     private static Connection connect_to_database(){
         try {
             connection = DriverManager.getConnection(url, user, password);
@@ -60,7 +58,7 @@ public class Library extends BookTransaction  {
             return null;
         }
     }
-    
+
     private static void close_connection(){
         if(result != null){
                 try{
@@ -94,28 +92,29 @@ public class Library extends BookTransaction  {
             connection = connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery("SELECT * FROM Systemadmin");
-            
+
             while(result.next()){
                 user_name = result.getString("Username");
                 pass_word = result.getString("Password");
-                if (user_name.equals(username) && pass_word.equals(password))
-                    return true;
+                if (user_name.equals(username) && pass_word.equals(password)) {
+					return true;
+				}
             }
             return false;
             //System.out.println("SUCCESFULLY  LOGGEDIN");
             // System.out.println("INCORRECT USERNAME OR PASSWORD");
-        } catch(SQLException e) {  
+        } catch(SQLException e) {
             return false;
            // System.out.println("SQLException : " + e.getMessage());
         } finally {
             close_connection();
         }
     }
-    
+
     public boolean admin_signup(String worker_id, String full_name, String email, String user_name, String password) {
         String queryCheckWorker = "SELECT Full_name FROM Worker WHERE IdNumber = ?";
         String queryInsertAdmin = "INSERT INTO Systemadmin(Idnumber, Username, Password) VALUES (?, ?, ?)";
-        
+
         try {
             hire_new_worker(new Worker(full_name,worker_id,"Admin",email));
         } catch(SQLException ex){
@@ -148,7 +147,7 @@ public class Library extends BookTransaction  {
         }
         return false;
     }
-   
+
     public boolean resetPassword(String id_number, String new_password){
         String query = "UPDATE Systemadmin SET Password = ? WHERE  Idnumber = ?";
         try {
@@ -174,18 +173,18 @@ public class Library extends BookTransaction  {
         }
         return false;
     }
-    
+
     public void hire_new_worker(Worker newWorker) throws SQLException {
         String name = newWorker.getFull_name();
         String pos = newWorker.getRole();
         String email = newWorker.getEmail_id();
         String worker_id = newWorker.getId_number();
-        
+
         String query1 = "INSERT INTO Worker (Full_name, IdNumber, Position, Email) VALUES ";
         String query2 = "('" + name + "', '"  + worker_id + "', '" + pos + "', '"+ email +"')";
-        
+
         try {
-            connection = connect_to_database(); 
+            connection = connect_to_database();
             statement = connection.createStatement();
             statement.executeUpdate(query1 + query2);
         } catch(SQLException e){
@@ -213,16 +212,16 @@ public class Library extends BookTransaction  {
         String user_name = new_user.getFull_name();
         String user_email = new_user.getEmail_id();
         String type = new_user.getType();
-        
+
         String query1 = "INSERT INTO User (Fullname, Idnumber, Email, Type) VALUES ";
         String query2 = "('" + user_name + "', '" + user_id + "', '" + user_email + "', '" + type +"')";
-        
+
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             statement.execute(query1 + query2);
         } catch( SQLException e){
-            System.out.println(e.getMessage());
+            //System.out.println(e.getMessage());
         } finally {
             close_connection();
         }
@@ -240,7 +239,7 @@ public class Library extends BookTransaction  {
             close_connection();
         }
     }
-    
+
     public boolean isVerified(String id_number) {
         String query = "SELECT * FROM User WHERE Idnumber = '" + id_number + "'";
         try {
@@ -265,25 +264,27 @@ public class Library extends BookTransaction  {
             connection = connect_to_database();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            
+
             while(resultSet.next()){
-                users.add(new User(resultSet.getString("Type"), 
-                        resultSet.getString("Fullname"), 
-                        resultSet.getString("Idnumber"), 
+                users.add(new User(resultSet.getString("Type"),
+                        resultSet.getString("Fullname"),
+                        resultSet.getString("Idnumber"),
                         resultSet.getString("Email")));
             }
         } catch(SQLException e){
             return null;
         } finally {
             close_connection();
-            if(resultSet!=null) try {
-                resultSet.close();
-            } catch (SQLException ex) {
-            }
+            if(resultSet!=null) {
+				try {
+				    resultSet.close();
+				} catch (SQLException ex) {
+				}
+			}
         }
-        return users;  
+        return users;
     }
-    
+
     public ArrayList<Author> getAuthorList(){
         ResultSet resultSet = null;
         String query = "SELECT * FROM Author";
@@ -291,12 +292,12 @@ public class Library extends BookTransaction  {
             connection = connect_to_database();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
-            
+
             while(resultSet.next()){
                 authors.add(new Author(resultSet.getString("Biography"),
-                        resultSet.getString("Country"), 
-                        resultSet.getString("Fullname"), 
-                        resultSet.getString("Idnumber"), 
+                        resultSet.getString("Country"),
+                        resultSet.getString("Fullname"),
+                        resultSet.getString("Idnumber"),
                         resultSet.getString("Email")));
             }
             return authors;
@@ -304,28 +305,30 @@ public class Library extends BookTransaction  {
             //
         } finally {
             close_connection();
-            if(resultSet!=null)try {
-                resultSet.close();
-            } catch (SQLException ex) {
-                ////
-            }
+            if(resultSet!=null) {
+				try {
+				    resultSet.close();
+				} catch (SQLException ex) {
+				    ////
+				}
+			}
         }
         return authors;
     }
-    
+
     public ArrayList<BookTransaction> getIssuedBooks(){
         String query = "SELECT * FROM Borrow_transaction";
         ResultSet resultSet = null;
-        
+
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             resultSet = statement.executeQuery(query);
             while(resultSet.next()){
-                issued_books.add(new BookTransaction(resultSet.getString("borrowId"), 
-                        resultSet.getString("Bookid"), 
-                        resultSet.getString("UserID"), 
-                        resultSet.getString("Rent_date"), 
+                issued_books.add(new BookTransaction(resultSet.getString("borrowId"),
+                        resultSet.getString("Bookid"),
+                        resultSet.getString("UserID"),
+                        resultSet.getString("Rent_date"),
                         resultSet.getString("Due_date")));
             }
             return issued_books;
@@ -333,15 +336,17 @@ public class Library extends BookTransaction  {
             /// I donnnooo
         } finally{
             close_connection();
-            if(resultSet != null) try {
-                resultSet.close();
-            } catch (SQLException ex) {
-                ////
-            }
+            if(resultSet != null) {
+				try {
+				    resultSet.close();
+				} catch (SQLException ex) {
+				    ////
+				}
+			}
         }
         return issued_books;
     }
-    
+
     public void addAuthor(Author author){
         String insertAuthor = "INSERT INTO Author (Idnumber, Fullname, Email, Country, Biography) VALUES (?, ?, ?, ?, ?)";
         try {
@@ -352,7 +357,7 @@ public class Library extends BookTransaction  {
             prprd_statement.setString(3, author.getEmail_id());
             prprd_statement.setString(4, author.getCountry());
             prprd_statement.setString(5, author.getBiography());
-            
+
             prprd_statement.executeUpdate();
         } catch (SQLException e){
             System.out.println(e.getMessage());
@@ -360,7 +365,7 @@ public class Library extends BookTransaction  {
             close_connection();
         }
     }
-    
+
     public int removeAuthor(String auth_id) throws SQLException{
         String query = "DELETE FROM Author WHERE Idnumber = '" + auth_id + "'";
         try {
@@ -395,7 +400,7 @@ public class Library extends BookTransaction  {
             close_connection();
     }
 }
-    
+
     public int removeBook(String bookId) throws SQLException{
         String query = "DELETE FROM Book WHERE bookId = '" + bookId + "'";
         try {
@@ -437,7 +442,7 @@ public class Library extends BookTransaction  {
                         return rowAffected;
                     }
                 } else {
-                    return 0; 
+                    return 0;
                 }
             }
 
@@ -447,19 +452,20 @@ public class Library extends BookTransaction  {
             close_connection();
         }
     }
-    
+
     public String getBookId(String title){
         String query = "SELECT Bookid FROM Book WHERE Title = '" + title + "'";
         try {
             connection = connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery(query);
-            if(result.next())
-                return result.getString("Bookid");
-            else
-                return "";
+            if(result.next()) {
+				return result.getString("Bookid");
+			} else {
+				return "";
+			}
         } catch(SQLException e){
-            
+
         }
         return "";
     }
@@ -478,14 +484,14 @@ public class Library extends BookTransaction  {
             close_connection();
         }
     }
-    
+
     public ArrayList<Book> getBookList() throws Exception {
         ResultSet resultSet = null;
         String query = "SELECT * FROM Book";
         try {
             connection = connect_to_database();
-            connection.setAutoCommit(true); 
-            
+            connection.setAutoCommit(true);
+
             statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
             resultSet = statement.executeQuery(query);
             while(resultSet.next()){
@@ -498,22 +504,24 @@ public class Library extends BookTransaction  {
                 String lang = resultSet.getString("Lang");
                 String synopsis = resultSet.getString("Synopsis");
                 Double price = resultSet.getDouble("Price");
-                                
+
                 Author author = getAuthorById(auth_id);
                 books.add(new Book(title, author, bookId, year, edition, genre,lang, synopsis, price));
-            }            
+            }
         } catch(SQLException e){
             throw new Exception("BOOKS NOT FOUND");
         } finally {
             close_connection();
-            if(resultSet!=null) try {
-                resultSet.close();
-            } catch (SQLException ex) {
-            }
+            if(resultSet!=null) {
+				try {
+				    resultSet.close();
+				} catch (SQLException ex) {
+				}
+			}
         }
         return this.books;
     }
-    
+
     public Worker getWorkerById(String id) {
         String query = "SELECT * FROM Worker WHERE IdNumber = '" + id + "'";
         try {
@@ -542,8 +550,9 @@ public class Library extends BookTransaction  {
             connection= connect_to_database();
             statement = connection.createStatement();
             result = statement.executeQuery(query);
-            if(result.next())
-                return true;
+            if(result.next()) {
+				return true;
+			}
         } catch (SQLException e){
            // System.out.println("SQLException: " + e.getMessage());
         } finally {
@@ -563,7 +572,7 @@ public class Library extends BookTransaction  {
     public static int getTotalNumberOfUsers() {
         return count_row("User");
     }
-    
+
     private static int count_row(String table){
         String query = "SELECT COUNT(*) AS row_count FROM " + table;
         int rowCount;
@@ -600,7 +609,7 @@ public class Library extends BookTransaction  {
         }
         return null;
     }
-    
+
     public static void main(String[] args) {
         System.out.println("-----------------------------------------------------------------");
         System.out.println("-----------------------------------------------------------------");
@@ -608,67 +617,18 @@ public class Library extends BookTransaction  {
         System.out.println("-----------------------------------------------------------------");
         System.out.println("-----------------------------------------------------------------");
 
-        Library lib = new Library();
-        /* Author a = lib.getAuthorById("A000");
-        if (a != null){
-            System.out.println("Full name: " + a.getFull_name());
-            System.out.println("Biography: " + a.getBiography());
-        } 
-        System.out.println("#of Authors in db: " + count_row("Book")); 
-        
-        if(lib.getAvailabilityOfABook("The Silent Symphony"))
-            System.out.println("The book 'The Silent Symphony' exists in the database");
-        else
-            System.out.println("The book 'The Silent Symphony' doesn't exist in the database");
-        
-        Worker w = lib.getWorkerById("ETS1518/14");
-        
-        if (w != null){
-            System.out.println("Full name: " + w.getId_number());
-            System.out.println("Position : " + w.getEmail_id());
-        } 
-        
-       
-        
-        Datee bd = new Datee(2024, 01, 10);
-        Datee dd = new Datee(2023, 02, 10);
-        
-        lib.borrowBook("B006_U001", "U001", "The Silent Symphony", bd, dd);
-        
-        Author a = lib.getAuthorById("A015");
-        Book b = new Book("Shattered Reflections", a, "B015", 2022, 1, "Contemporary Fiction", "English", "Exploring shattered relationships and the pursuit of self-discovery.", 27.99);
-        lib.addBook(b); 
-        Author auth = new Author("Historical fiction writer weaving tales from ancient civilizations.", "Egypt", "Ahmed Ali", "A020", "ahmed.ali@email.com" );
-        lib.addAuthor(auth);
-        
-        if(lib.isVerified("U005")){
-            System.out.println("User U005 is verified!");
-        }
-        
-        User u = new User("Reader", "Jack Miller", "U010", "jack.miller@email.com");
-        lib.register_new_user(u);
-        
-        lib.fire_worker("-001");
-        
-        Worker newW = new Worker("Grace Brown", "W010", "Administrator", "grace.brown@email.com");
-        lib.hire_new_worker(newW);
-        
-        //
-        
-        //lib.admin_signup("ETS1518/14", "tamiu", "abcd");
-        //lib.resetPassword("ETS1518/14", "abcd");
-        
-        ArrayList<Book> bl = lib.getBookList();
-        if(bl != null){
-        for(Book b : bl)
-            System.out.println(b.getAuthor().getBiography());
-        }
-        System.out.println(lib.getBookId("The Silent Symphony"));
-        System.out.println(lib.borrowBook("B00_U001", "U001", "The Silent Symphony", "2024-1-2", "2024-1-1"));
-        lib.borrowBook("BORR113", "U002", "Political Insights", new Date(2024, 2, 20), new Date(2024, 2, 25)); */
-        
-        
-        
-        
+        new Library();
+
+
+
+
     }
+
+	public ArrayList<Worker> getWorkers() {
+            return workers;
+	}
+
+	public void setWorkers(ArrayList<Worker> workers) {
+		this.workers = workers;
+	}
 }

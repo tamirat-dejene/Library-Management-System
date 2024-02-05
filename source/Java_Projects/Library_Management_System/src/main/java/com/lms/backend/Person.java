@@ -34,5 +34,5 @@ public class Person {
 
     public void setEmail_id(String email_id) {
         this.email_id = email_id;
-    }    
+    }
 }

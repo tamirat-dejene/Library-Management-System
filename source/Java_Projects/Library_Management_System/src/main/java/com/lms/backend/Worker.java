@@ -7,7 +7,7 @@ public class Worker extends Person {
         super(full_name, id_number, email);
         this.role = role;
     }
-    
+
     public String getRole() {
         return this.role;
     }

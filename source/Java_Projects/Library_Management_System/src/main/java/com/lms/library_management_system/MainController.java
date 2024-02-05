@@ -1,6 +1,7 @@
 package com.lms.library_management_system;
 
 import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +11,11 @@ import javafx.scene.layout.AnchorPane;
 /**
  * @author Team INNOV8
  */
-public class MainController {   
+public class MainController {
     @FXML private AnchorPane centerPane;
     @FXML private AnchorPane homeAnchorPane;
     //@FXML private BorderPane mainBorderPane;  // Main Layout
-    
+
     @FXML
     public void listBooks() {
         try {
@@ -28,7 +29,8 @@ public class MainController {
         }
     }
 
-    @FXML
+    @SuppressWarnings("exports")
+	@FXML
     public void listUsers(ActionEvent e) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(UserController.class.getResource("UserDashboard.fxml"));
@@ -39,7 +41,7 @@ public class MainController {
            // System.out.println("IOException: " + ex.getMessage());
         }
     }
-    
+
     @FXML
     void home(ActionEvent event) {
         try {

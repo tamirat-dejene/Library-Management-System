@@ -1,8 +1,10 @@
 package com.lms.library_management_system;
 
-import com.lms.backend.Library;
 import java.io.IOException;
 import java.util.Optional;
+
+import com.lms.backend.Library;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -26,10 +28,10 @@ public class LoginController extends Application {
     private Scene scene;
     private Parent root;
     private Stage stage;
-    
-    private Library library;
-    @FXML private BorderPane scenePane;
 
+    private Library library;
+
+    @FXML private BorderPane scenePane;
     @FXML private PasswordField passwordTextField;
     @FXML private TextField usernameTextField;
 
@@ -38,10 +40,10 @@ public class LoginController extends Application {
     @FXML private TextField sginUp_idNum_tf;
     @FXML private PasswordField sginUp_password_tf;
     @FXML private TextField sginUp_userName_tf;
-    
+
     private TextField resetPassword_IdTextField;
-    private PasswordField resetPassword_NewPassPasswordField;    
-    
+    private PasswordField resetPassword_NewPassPasswordField;
+
     @FXML
     void aboutUs(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION,"", ButtonType.OK);
@@ -49,7 +51,7 @@ public class LoginController extends Application {
         alert.setHeaderText(" Innov8");
         alert.setContentText("Developed by Team INNOV8");
         alert.setHeight(100);
-       
+
         alert.show();
     }
 
@@ -71,38 +73,43 @@ public class LoginController extends Application {
     }
     @FXML
     void resetPassword(ActionEvent event) {
-        Dialog dialog = new Dialog();
+        Dialog<?> dialog = new Dialog<>();
         dialog.setTitle("Reset Password");
         dialog.getDialogPane().getButtonTypes().add(ButtonType.APPLY);
         dialog.getDialogPane().setContent(resetForm());
-        if(dialog.showAndWait().get() == ButtonType.APPLY){
-            String idNum = resetPassword_IdTextField.getText();
-            String newPass = resetPassword_NewPassPasswordField.getText();
-            if(newPass.length() < 4)
-                showAlertMessage("INVALID NEW PASSWORD");
-            else {
-                Library lib = new Library();
-                if (lib.resetPassword(idNum, newPass)) {
-                    showAlertSuccessMessage("Your password reset successfully.");
-                } else {
-                    showAlertMessage("INVALID ID NUMBER");
+        try {
+        	if(dialog.showAndWait().get() == ButtonType.APPLY){
+                String idNum = resetPassword_IdTextField.getText();
+                String newPass = resetPassword_NewPassPasswordField.getText();
+                if(newPass.length() < 4) {
+    				showAlertMessage("INVALID NEW PASSWORD");
+    			} else {
+                    Library lib = new Library();
+                    if (lib.resetPassword(idNum, newPass)) {
+                        showAlertSuccessMessage("Your password reset successfully.");
+                    } else {
+                        showAlertMessage("INVALID ID NUMBER");
+                    }
                 }
-            }
+            }	
+        } catch(Exception e) {
+        	// Do nothing
         }
+        
     }
-    
+
     public static void showAlertMessage(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
         alert.setHeaderText("ERROR");
         alert.showAndWait();
     }
-    
+
     private void showAlertSuccessMessage(String message){
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.setHeaderText("SUCCESS");
         alert.showAndWait();
     }
-    
+
     private Node resetForm(){
         resetPassword_IdTextField = new TextField("");
         resetPassword_NewPassPasswordField = new PasswordField();
@@ -113,7 +120,7 @@ public class LoginController extends Application {
         pane.add(resetPassword_NewPassPasswordField, 1, 1);
         return pane;
     }
-    
+
     @FXML
     void signup(ActionEvent event) {
         try {
@@ -145,16 +152,16 @@ public class LoginController extends Application {
                 System.out.println(password);
 
                 library = new Library();
-                if(email.length() <= 3 || fn.length() <= 3 || id.length() < 1 || userName.length() <= 3 || password.length() <= 4 )
-                    showAlertMessage("INVALID INPUTS");
-                else{
+                if(email.length() <= 3 || fn.length() <= 3 || id.length() < 1 || userName.length() <= 3 || password.length() <= 4 ) {
+					showAlertMessage("INVALID INPUTS");
+				} else{
                     library.admin_signup(id, fn, email, userName, password);
                     showAlertSuccessMessage("Signed Up Successfully as an Admin. You can now Login");
                 }
             }
         } catch (IOException ex) {
             showAlertMessage("Operation unsuccessful");
-            //ex.printStackTrace();  
+            //ex.printStackTrace();
         }
     }
 
@@ -189,20 +196,21 @@ public class LoginController extends Application {
         launch(args);
     }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+    @SuppressWarnings("exports")
+	@Override
+	public void start(Stage stage) throws Exception {
         FXMLLoader fxmlLoader = new FXMLLoader(LoginController.class.getResource("adminlogin.fxml"));
         Image icon = new Image(getClass().getResourceAsStream("LibraryIcon.png"));
 
         root = fxmlLoader.load();
-        
+
         scene = new Scene(root);
-        
+
         stage.setScene(scene);
         stage.setResizable(false);
         stage.centerOnScreen();
         stage.setTitle("Library Management System");
-        
+
         stage.getIcons().add(icon);
         stage.show();
     }

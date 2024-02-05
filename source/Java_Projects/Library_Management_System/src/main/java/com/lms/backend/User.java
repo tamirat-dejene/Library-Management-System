@@ -1,7 +1,5 @@
 package com.lms.backend;
 
-import java.util.Objects;
-
 public class User extends Person {
 
     private String type;
@@ -17,5 +15,5 @@ public class User extends Person {
 
     public void setType(String type) {
         this.type = type;
-    } 
+    }
 }
