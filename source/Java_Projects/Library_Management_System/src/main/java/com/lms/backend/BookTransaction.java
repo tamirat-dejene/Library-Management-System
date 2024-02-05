@@ -1,7 +1,5 @@
 package com.lms.backend;
 
-import java.sql.Date;
-
 /**
  *
  * @author PC
@@ -20,7 +18,7 @@ public class BookTransaction {
         this.issue_date = issue_date;
         this.return_date = return_date;
     }
-    
+
     public BookTransaction(){
         ////
     }
@@ -43,8 +41,8 @@ public class BookTransaction {
 
     public String getReturn_date() {
         return return_date;
-    }    
-    
+    }
+
    // public abstract void returnBook(String book_id, String user_id);
    // public abstract void borrowBook(String borrId, String user_id, String title, Date rd, Date dd);
 }

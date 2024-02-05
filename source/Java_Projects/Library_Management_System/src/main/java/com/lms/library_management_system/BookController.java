@@ -1,14 +1,15 @@
 package com.lms.library_management_system;
 
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+
 import com.lms.backend.Author;
 import com.lms.backend.Book;
 import com.lms.backend.BookTransaction;
 import com.lms.backend.Library;
 
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,6 +24,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
@@ -38,7 +40,7 @@ public class BookController implements Initializable {
     @FXML private TableColumn<Author, String> AuthDb_colFullName;
     @FXML private TableColumn<Author, String> AuthorDb_colAuthId;
 
-    
+
     // BookShelf table cols
     @FXML private TableView<Book> BookShelfTableView;
     @FXML private TableColumn<Book, Integer> BookShelf_ColEdition;
@@ -58,7 +60,7 @@ public class BookController implements Initializable {
     @FXML private TableColumn<BookTransaction, String> issuedBook_colIssueId;
     @FXML private TableColumn<BookTransaction, String> issuedBook_colUserId;
     @FXML private TableColumn<BookTransaction, String> issuedBook_returnDate;
-    
+
     // Issue book form controls
     @FXML private DatePicker dueDateDatePicker;
     @FXML private DatePicker issueDateDatePicker;
@@ -70,8 +72,9 @@ public class BookController implements Initializable {
     @FXML private SplitPane mainSplitPane;
     @FXML private AnchorPane upperAnchorPane;
     @FXML private AnchorPane lowerAnchorPane;
-    
+
     // Tables container
+    @FXML private TabPane tableViews_TabPane;
     @FXML private ScrollPane booksTableScrollPane;
     @FXML private ScrollPane authorTableScrolPane;
     @FXML private ScrollPane issuedBookScrollPane;
@@ -82,7 +85,7 @@ public class BookController implements Initializable {
     @FXML private TextField newAuthorEmail_tf;
     @FXML private TextField newAuthorFullname_tf;
     @FXML private TextField newAuthorId_tf;
-    
+
     // New book form controls
     @FXML private TextField newBookAuthId_tf;
     @FXML private TextField newBookEdition_tf;
@@ -93,12 +96,12 @@ public class BookController implements Initializable {
     @FXML private TextField newBookSynop_tf;
     @FXML private TextField newBookTitle_tf;
     @FXML private TextField newBookYear_tf;
-    
+
     // Return book form controls
     @FXML private TextField returnIssuedBookId_tf;
     @FXML private TextField returnIssuedUserId_tf;
     @FXML private Label returnStatusLabel;
-    
+
     // Remove Book, Author
     @FXML private TextField removeBookTextField;
     @FXML private TextField removeAuthorTextField;
@@ -110,11 +113,11 @@ public class BookController implements Initializable {
         String email = newAuthorEmail_tf.getText();
         String fullname = newAuthorFullname_tf.getText();
         String id = newAuthorId_tf.getText();
-        
+
         Library lib = new Library();
-        if(bio.isBlank() || country.isBlank() || email.isBlank() || fullname.isBlank() || id.isBlank())
-            showAlertMessage("INVALID INPUTS");
-        else{
+        if(bio.isBlank() || country.isBlank() || email.isBlank() || fullname.isBlank() || id.isBlank()) {
+			showAlertMessage("INVALID INPUTS");
+		} else{
             Author newAuthor = new Author(bio, country, fullname, id, email);
             lib.addAuthor(newAuthor);
             AuthorTableView.getItems().add(newAuthor);
@@ -133,11 +136,11 @@ public class BookController implements Initializable {
             int edition = Integer.parseInt(newBookEdition_tf.getText());
             int year = Integer.parseInt(newBookYear_tf.getText());
             double price = Double.parseDouble(newBookPrice_tf.getText());
-            
+
             Library lib = new Library();
-            if(auth_id.isBlank() || title.isBlank() || genre.isBlank() || bookId.isBlank() || lang.isBlank() || synopsis.isBlank() || edition < 1 || year < 0 || price < 0)
-                showAlertMessage("Invalid Inputs.");
-            else{
+            if(auth_id.isBlank() || title.isBlank() || genre.isBlank() || bookId.isBlank() || lang.isBlank() || synopsis.isBlank() || edition < 1 || year < 0 || price < 0) {
+				showAlertMessage("Invalid Inputs.");
+			} else{
                 Book b = new Book (title, lib.getAuthorById(auth_id), bookId, year, edition, genre, lang, synopsis, price);
                 lib.addBook(b);
                 BookShelfTableView.getItems().add(b);
@@ -155,40 +158,40 @@ public class BookController implements Initializable {
             String book_title = issuedBookTitle_tf.getText();
             String issueDate = issueDateDatePicker.getValue().toString();
             String dueDate = dueDateDatePicker.getValue().toString();
-            
-            System.out.println(issueDateDatePicker.getValue().toString());
-            System.out.println(dueDateDatePicker.getValue().toString());
+
+           // System.out.println(issueDateDatePicker.getValue().toString());
+           // System.out.println(dueDateDatePicker.getValue().toString());
 
             Library lib = new Library();
             String book_id = lib.getBookId(book_title);
-            if(issue_id.isBlank() || user_id.isBlank() || book_title.isBlank() || issueDate.isBlank() || dueDate.isBlank() || book_id.isBlank())
-                showAlertMessage("INVALID INPUT DATA.");
-            else {
+            if(issue_id.isBlank() || user_id.isBlank() || book_title.isBlank() || issueDate.isBlank() || dueDate.isBlank() || book_id.isBlank()) {
+				showAlertMessage("INVALID INPUT DATA.");
+			} else {
                 int rows = lib.borrowBook(issue_id, user_id, book_title, issueDate, dueDate);
-                if(rows < 1)
-                    showAlertMessage("The Book is not returned (yet not available)");
-                else {
+                if(rows < 1) {
+					showAlertMessage("The Book is not returned (yet not available)");
+				} else {
                     BookTransaction newTransaction = new BookTransaction(issue_id, book_id, user_id, issueDate, dueDate);
                     issuedBookListTableView.getItems().add(newTransaction);
                 }
             }
         } catch(Exception e){
             showAlertMessage("SYSTEM ERROR!");
-        }        
+        }
     }
 
     @FXML
     void returnIssuedBook(ActionEvent event) {
         String bookId = returnIssuedBookId_tf.getText();
         String userId = returnIssuedUserId_tf.getText();
-        
+
         Library lib = new Library();
         try{
-            if(bookId.isBlank() || userId.isBlank())
-                showAlertMessage("Invalid Input");
-            else{
+            if(bookId.isBlank() || userId.isBlank()) {
+				showAlertMessage("Invalid Input");
+			} else{
                 lib.returnBook(bookId, userId);
-                refreshButton(event);                
+                refreshButton(event);
             }
             returnStatusLabel.setText("Thankyou. Come again!");
         } catch(Exception e){
@@ -203,12 +206,14 @@ public class BookController implements Initializable {
         try{
             int x = lib.removeBook(book_id);
             refreshButton(event);
-            if(x == 0)showAlertMessage("THE BOOK IS NOT FOUND");
+            if(x == 0) {
+				showAlertMessage("THE BOOK IS NOT FOUND");
+			}
         } catch(SQLException ex){
             showAlertMessage("THE BOOK IS NOT FOUND");
         }
     }
-    
+
     @FXML
     void removeAuthorButton(ActionEvent event) {
         String author_id = removeAuthorTextField.getText();
@@ -216,30 +221,32 @@ public class BookController implements Initializable {
         try {
             int x = lib.removeAuthor(author_id);
             refreshButton(event);
-            if(x == 0)showAlertMessage("THE AUTHOR IS NOT FOUND");
+            if(x == 0) {
+				showAlertMessage("THE AUTHOR IS NOT FOUND");
+			}
         } catch(SQLException ex){
             showAlertMessage("THE AUTHOR IS ASSOCIATED WITH LIBRARY BOOK. FIRST REMOVE THE BOOK");
         }
     }
-        
+
     @FXML
     void refreshButton(ActionEvent event) {
         populate_bookshelf(load_data());
         populate_authortable(load_author_data());
         populate_issueBooks(load_issued_books());
     }
-        
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initialize_BookShelfTableViewCols();
         initialize_AuthorTableViewCols();
         initialize_issuedBookListTableViewCols();
-        
+
         populate_bookshelf(load_data());
         populate_authortable(load_author_data());
         populate_issueBooks(load_issued_books());
     }
-    
+
     private void showAlertMessage(String message){
         Alert alert = new Alert(Alert.AlertType.ERROR, message, ButtonType.OK);
         alert.setHeaderText("ERROR OCCURED WHILE PROCESSING THE DATA");
@@ -255,17 +262,17 @@ public class BookController implements Initializable {
             return null;
         }
     }
-    
+
     private ArrayList<Author> load_author_data(){
         Library lib = new Library();
         return lib.getAuthorList();
     }
-    
+
     private ArrayList<BookTransaction> load_issued_books(){
         Library lib = new Library();
         return lib.getIssuedBooks();
     }
-    
+
     private void initialize_AuthorTableViewCols() {
         AuthDb_colBio.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getBiography()));
         AuthDb_colCountry.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getCountry()));

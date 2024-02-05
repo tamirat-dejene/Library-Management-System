@@ -1,12 +1,9 @@
 package com.lms.backend;
 
-import java.util.ArrayList;
-import java.util.Objects;
-
 public class Book {
     private String title;
-    private Author author; 
-    private String ISBN; 
+    private Author author;
+    private String ISBN;
     private int year;
     private int edition;
     private String genre;
@@ -14,7 +11,7 @@ public class Book {
     private String language;
     private String synopsis;
     private double price;
-    
+
     public Book(String title, Author author, String ISBN, int year, int edition, String genre, String language, String synopsis, double price) {
         this.title = title;
         this.author = author;
