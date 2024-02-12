@@ -45,4 +45,4 @@ Our team is open to hear from you.
 
 ## License
 
-This project is 😁 will be licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](LICENSE).
