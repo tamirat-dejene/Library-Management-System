@@ -5,11 +5,17 @@
 The Library Management System is a Java-based application designed to manage the operations of a library. It includes functionalities such as adding and removing books, managing user accounts, and keeping track of book borrowings and returns.
 
 ## Developers (Contributors)
-| :---         |     :---:      | :--- :    |     :---:      |
+| :---         |     :---:      | :---     |     :---:      |
 | Tamirat Dejenie   | Tadiyos Dejene  | Tebarek Shemsu   | Yohannes Tigistu   |
 
  
-
+## Developers (Contributors)
+| Name | Id |
+| :---         |     :---:      |
+| Tamirat Dejenie   | ETS1518/14 |
+| Tadiyos Dejene   | ETS1522/14 | 
+| Tebarek Shemsu   | ETS1526/14 | 
+| Yohannes Tigistu   | ETS1703/14 | 
 
 
 
