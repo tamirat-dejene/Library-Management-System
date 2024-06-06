@@ -23,20 +23,10 @@ The Library Management System is a Java-based application designed to manage the
 - **Return Book:** Enable users to return borrowed books.
 - **Employee and Admin Registration:** Provide
   
-## Technologies We Used
+## Installation
 
-- Java
-- Object-Oriented Programming (OOP) principles
-
-## Project Structure
-
-This project is structured using a simple package organization:
-
- -- Coming soon
-
-## Usage
-
--- Coming soon
+To set up and build the project  you need to make sure that u have **Java Development Kit (JDK) 11** and **Apache Maven Java Project Manager**. If you use vs code, you can install the **Extension Pack For Java**
+extension or download 'em directly from [Oracle's website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) and [Maven](https://maven.apache.org/install.html) Once you have those Maven will automatically download all the project dependencies specified in the `pom.xml` file and build the project when you run the appropriate Maven commands.
 
 ## Contribution
 
