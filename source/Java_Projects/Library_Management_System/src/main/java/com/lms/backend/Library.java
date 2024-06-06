@@ -43,8 +43,8 @@ public class Library extends BookTransaction  {
         result = null;
 
         url = "jdbc:mysql://localhost:3306/Library_Management_System";
-        user = "root";
-        password = "tamirat.mySQL";
+        user = "username, the default is root";
+        password = "mysql-password-if-any";
     }
 
     private static Connection connect_to_database(){
