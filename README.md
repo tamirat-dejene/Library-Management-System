@@ -120,10 +120,10 @@ CREATE TABLE Systemadmin (
 );
 ```
 
-The after the database is created succesfully update the database configuration in the com.lms.backend.Library class. Ensure it includes the correct database URL, username, and password.
+After the database is created succesfully, update the database configuration in the com.lms.backend.Library class. Ensure it includes the correct database URL, username, and password.
 
 ### Build the Project
-Use Maven to build the project. Run the following command in the project directory:
+Use Maven to build the project. Run the following command in the project directory by opening the external terminal or inside the vscode:
 ```sh
 mvn clean install
 ```
@@ -140,7 +140,9 @@ This will start the JavaFX application.
 The project follows a modular structure. Below is an overview of the main modules and their purposes:
 
 - **module-info.java**: Contains module declarations and dependencies.
-- **src/main/java**: Contains the Java source files.
+- **src/main/java**: Contains the Java source files withing the following two packages.
+  -   com.lms.backend
+  -   com.lms.LibraryManagementSystem
 - **src/main/resources**: Contains the FXML files and other resources.
 
 ## Contributing
