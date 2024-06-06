@@ -9,11 +9,6 @@ The Library Management System is a Java-based application designed to manage the
 | Tamirat Dejenie | Tadiyos Dejene | Tebarek Shemsu | Yohannes Tigistu |
 | :--- | :--- | :--- | :--- |
 
- 
-
-
-
-
 ## Features
 
 - **Add Book:** Add new books to the library inventory.
@@ -22,17 +17,166 @@ The Library Management System is a Java-based application designed to manage the
 - **Borrow Book:** Allow users to borrow books from the library.
 - **Return Book:** Enable users to return borrowed books.
 - **Employee and Admin Registration:** Provide
-  
+# Library Management System
+
+## Introduction
+The Library Management System is a Java-based application designed to manage library resources efficiently. This project utilizes JavaFX for the graphical user interface and MySQL for database management. It is structured as a modular Java application and managed using Maven.
+
+## Prerequisites
+Before you begin, ensure you have the following installed on your system:
+
+- Java Development Kit (JDK) 17 or higher
+- Apache Maven 3.6.3 or higher
+- MySQL Server
+
+## Dependencies
+The project relies on the following dependencies:
+
+- JavaFX Controls (version 21.0.1)
+- JavaFX FXML (version 21.0.1)
+- MySQL Connector/J (version 8.2.0)
+
+These dependencies are managed via Maven and are specified in the `pom.xml` file.
+
 ## Installation
+To set up and build the project, follow these steps:
 
-To set up and build the project  you need to make sure that u have **Java Development Kit (JDK) 11** and **Apache Maven Java Project Manager**. If you use vs code, you can install the **Extension Pack For Java**
-extension or download 'em directly from [Oracle's website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) and [Maven](https://maven.apache.org/install.html) Once you have those Maven will automatically download all the project dependencies specified in the `pom.xml` file and build the project when you run the appropriate Maven commands.
+- **Ensure you have Java Development Kit (JDK) 11**:
+  - Download from [Oracle's website](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html).
+  - Alternatively, if using VS Code, install the **Extension Pack For Java** extension.
 
-## Contribution
+- **Install Apache Maven**:
+  - Download from [Maven's official website](https://maven.apache.org/install.html).
 
-Contributions are welcome! If you find any issues or have suggestions for improvements, feel free to open an issue or create a pull request.
-Our team is open to hear from you.
+Once you have these tools, Maven will automatically download all the project dependencies specified in the `pom.xml` file and build the project when you run the appropriate Maven commands.
+
+### Clone the Repository
+First, clone the repository to your local machine using the following command:
+```sh
+git clone https://github.com/your-username/library-management-system.git
+```
+Navigate to the project directory:
+```sh
+cd library-management-system
+```
+
+### Configure the Database
+1. Start your MySQL server.
+2. Create a new database for the library management system. You can do this using the MySQL command line or MySQL Workbench.
+```sql
+CREATE DATABASE IF NOT EXISTS Library_Management_System;
+USE Library_Management_System;
+
+CREATE TABLE Author (
+    Idnumber VARCHAR(30) PRIMARY KEY,
+    Fullname VARCHAR(30) NOT NULL,
+    Email VARCHAR(30),
+    Country VARCHAR(30),
+    Biography VARCHAR(300)
+);
+
+CREATE TABLE Book (
+    Bookid VARCHAR(30) PRIMARY KEY,
+    Title VARCHAR(60) NOT NULL,
+    AuthorIdnumber VARCHAR(30),
+    Publicationyear INT NOT NULL,
+    Edition INT,
+    Genre VARCHAR(100),
+    Lang VARCHAR(50),
+    Synopsis VARCHAR(400),
+    Price DOUBLE,
+    FOREIGN KEY (AuthorIdnumber) REFERENCES Author(Idnumber)
+);
+
+CREATE TABLE USER (
+    Fullname VARCHAR(50) NOT NULL,
+    Idnumber VARCHAR(30) PRIMARY KEY,
+    Email VARCHAR(50) NOT NULL,
+    Type VARCHAR(50)
+);
+
+CREATE TABLE Worker (
+    Fullname VARCHAR(100) NOT NULL,
+    IdNumber VARCHAR(50) PRIMARY KEY,
+    Position VARCHAR(30),
+    Email VARCHAR(50)
+);    
+
+CREATE TABLE Borrow_transaction (
+    borrowId VARCHAR(30) PRIMARY KEY,
+    Bookid VARCHAR(30),
+    UserID VARCHAR(50),
+    Rent_date DATE,
+    Due_date DATE,
+    FOREIGN KEY (Bookid) REFERENCES Book(Bookid),
+    FOREIGN KEY (UserID) REFERENCES USER(Idnumber)
+);
+
+CREATE TABLE Systemadmin (
+    Idnumber VARCHAR(50) PRIMARY KEY,
+    Username VARCHAR(50) NOT NULL,
+    Password VARCHAR(50) NOT NULL,
+    FOREIGN KEY (Idnumber) REFERENCES Worker(Idnumber)
+);
+```
+3. Update the database configuration in the com.lms.backend.Library class. Ensure it includes the correct database URL, username, and password.
+
+### Build the Project
+Use Maven to build the project. Run the following command in the project directory:
+```sh
+mvn clean install
+```
+This will download the required dependencies and compile the project.
+
+### Running the Application
+To run the application, use the following Maven command:
+```sh
+mvn javafx:run
+```
+This will start the JavaFX application.
+
+## Project Structure
+The project follows a modular structure. Below is an overview of the main modules and their purposes:
+
+- **module-info.java**: Contains module declarations and dependencies.
+- **src/main/java**: Contains the Java source files.
+- **src/main/resources**: Contains the FXML files and other resources.
+
+### Example module-info.java
+Here's an example of what the `module-info.java` file might look like:
+```java
+module com.example.librarymanagement {
+    requires javafx.controls;
+    requires javafx.fxml;
+    requires java.sql;
+    
+    opens com.example.librarymanagement to javafx.fxml;
+    exports com.example.librarymanagement;
+}
+```
+
+## Usage
+Once the application is running, you can:
+
+- Add, update, delete, and search for books
+- Manage library members
+- Issue and return books
+
+## Contributing
+If you wish to contribute to the project, please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch (`git checkout -b feature/your-feature`).
+3. Commit your changes (`git commit -m 'Add some feature'`).
+4. Push to the branch (`git push origin feature/your-feature`).
+5. Open a pull request.
 
 ## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-This project is licensed under the [MIT License](LICENSE).
+## Contact
+For any questions or suggestions, please open an issue or contact the project maintainer at your-email@example.com.
+
+---
+
+Feel free to customize this README further to better fit your project's specific details and structure.
