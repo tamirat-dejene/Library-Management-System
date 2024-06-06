@@ -20,8 +20,7 @@ The Library Management System is a Java-based application designed to manage the
 # Library Management System
 
 ## Introduction
-The Library Management System is a Java-based application designed to manage library resources efficiently. This project utilizes JavaFX for the graphical user interface and MySQL for database management. It is structured as a modular Java application and managed using Maven.
-
+The Library Management System is a Java-based application designed to manage library resources efficiently.
 ## Prerequisites
 Before you begin, ensure you have the following installed on your system:
 
@@ -53,16 +52,17 @@ Once you have these tools, Maven will automatically download all the project dep
 ### Clone the Repository
 First, clone the repository to your local machine using the following command:
 ```sh
-git clone https://github.com/your-username/library-management-system.git
+git clone https://github.com/tamirat-dejene/Library-Management-System.git
 ```
 Navigate to the project directory:
 ```sh
 cd library-management-system
 ```
 
+Or alternatively if you use vs code just open the cloned repository inside the VS code.
+
 ### Configure the Database
-1. Start your MySQL server.
-2. Create a new database for the library management system. You can do this using the MySQL command line or MySQL Workbench.
+Create a new database for the library management system. You can do this using the MySQL command line or MySQL Workbench.
 ```sql
 CREATE DATABASE IF NOT EXISTS Library_Management_System;
 USE Library_Management_System;
@@ -119,7 +119,8 @@ CREATE TABLE Systemadmin (
     FOREIGN KEY (Idnumber) REFERENCES Worker(Idnumber)
 );
 ```
-3. Update the database configuration in the com.lms.backend.Library class. Ensure it includes the correct database URL, username, and password.
+
+The after the database is created succesfully update the database configuration in the com.lms.backend.Library class. Ensure it includes the correct database URL, username, and password.
 
 ### Build the Project
 Use Maven to build the project. Run the following command in the project directory:
@@ -142,26 +143,6 @@ The project follows a modular structure. Below is an overview of the main module
 - **src/main/java**: Contains the Java source files.
 - **src/main/resources**: Contains the FXML files and other resources.
 
-### Example module-info.java
-Here's an example of what the `module-info.java` file might look like:
-```java
-module com.example.librarymanagement {
-    requires javafx.controls;
-    requires javafx.fxml;
-    requires java.sql;
-    
-    opens com.example.librarymanagement to javafx.fxml;
-    exports com.example.librarymanagement;
-}
-```
-
-## Usage
-Once the application is running, you can:
-
-- Add, update, delete, and search for books
-- Manage library members
-- Issue and return books
-
 ## Contributing
 If you wish to contribute to the project, please follow these steps:
 
@@ -170,13 +151,3 @@ If you wish to contribute to the project, please follow these steps:
 3. Commit your changes (`git commit -m 'Add some feature'`).
 4. Push to the branch (`git push origin feature/your-feature`).
 5. Open a pull request.
-
-## License
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Contact
-For any questions or suggestions, please open an issue or contact the project maintainer at your-email@example.com.
-
----
-
-Feel free to customize this README further to better fit your project's specific details and structure.
